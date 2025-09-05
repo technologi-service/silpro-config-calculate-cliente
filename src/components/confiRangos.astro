@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+import { actions } from "astro:actions";
+const {data, error} = await Astro.callAction(actions.getRangos, {})
+
+// Agrupa los rangos por nombre
+let grupos: Record<string, any[]> = {};
+if (Array.isArray(data)) {
+  for (const rango of data) {
+    if (!grupos[rango.nombre]) grupos[rango.nombre] = [];
+    grupos[rango.nombre].push(rango);
+  }
+}
+---
+
+<section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-green-100">
+  <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8">
+    <h2 class="text-3xl font-extrabold text-center text-purple-700 mb-6">Configuración de Rangos</h2>
+    {error && <p class="text-red-500">{error.message}</p>}
+    {Object.keys(grupos).length > 0 ? (
+      Object.entries(grupos).map(([nombreGrupo, rangos]) => (
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold text-purple-600 mb-4 border-b pb-2">{nombreGrupo}</h3>
+          <form class="space-y-4 grupo-form" autocomplete="off" data-grupo={nombreGrupo}>
+            <div class="grid gap-6">
+              {rangos.map((rango, idx) => (
+                <div class="grid grid-cols-3 gap-4" data-rango={rango.id}>
+                  <input type="hidden" name="id" value={rango.id} />
+                  <div class="flex flex-col gap-2">
+                    <label class="text-md font-semibold text-gray-700">Min Valor</label>
+                    <input type="number" name={`min_valor_${idx}`} value={rango.min_valor ?? ''} class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Valor mínimo" />
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <label class="text-md font-semibold text-gray-700">Max Valor</label>
+                    <input type="number" name={`max_valor_${idx}`} value={rango.max_valor ?? ''} class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Valor máximo" />
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <label class="text-md font-semibold text-gray-700">Puntuación</label>
+                    <div class="flex items-center gap-1">
+                      {Array.from({ length: 5 }).map((_, starIdx) => (
+                        <span
+                          class={
+                            starIdx < (rango.puntuacion ?? 0)
+                              ? 'text-yellow-400 text-2xl cursor-pointer'
+                              : 'text-gray-300 text-2xl cursor-pointer'
+                          }
+                          onclick={`this.parentElement.parentElement.parentElement.querySelector('input[name=\'puntuacion_${idx}\']').value = ${starIdx + 1}; this.parentElement.querySelectorAll('span').forEach((el, i) => el.className = i < ${starIdx + 1} ? 'text-yellow-400 text-2xl cursor-pointer' : 'text-gray-300 text-2xl cursor-pointer');`}
+                        >★</span>
+                      ))}
+                      <input type="hidden" name={`puntuacion_${idx}`} value={rango.puntuacion ?? 0} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button type="submit" class="w-full py-2 rounded-lg bg-gradient-to-r from-green-400 to-purple-500 text-white font-bold text-md shadow hover:scale-105 transition-transform mt-2">Guardar grupo</button>
+          </form>
+        </div>
+      ))
+    ) : (
+      <p class="text-center text-gray-500">No hay rangos registrados.</p>
+    )}
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.grupo-form').forEach(form => {
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const rangos: { id: number, min_valor: number | null, max_valor: number | null, puntuacion: number | null }[] = [];
+            const grupoDivs = form.querySelectorAll('[data-rango]');
+            grupoDivs.forEach((div, idx) => {
+              const idInput = div.querySelector('input[name="id"]');
+              const id = idInput ? (idInput as HTMLInputElement).value : null;
+              const minInput = div.querySelector(`input[name="min_valor_${idx}"]`) as HTMLInputElement | null;
+              const maxInput = div.querySelector(`input[name="max_valor_${idx}"]`) as HTMLInputElement | null;
+              const puntuacionInput = div.querySelector(`input[name="puntuacion_${idx}"]`) as HTMLInputElement | null;
+              const min_valor = minInput ? parseInt(minInput.value) : null;
+              const max_valor = maxInput ? parseInt(maxInput.value) : null;
+              const puntuacion = puntuacionInput ? parseInt(puntuacionInput.value) : null;
+              rangos.push({ id: Number(id), min_valor, max_valor, puntuacion });
+            });
+            const payload = { rangos };
+            console.log('Enviando grupo:', payload);
+            const res = await fetch('/api/update-rangos', {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            console.log('Respuesta:', result);
+          });
+        });
+      });
+    </script>
+  </div>
+</section>

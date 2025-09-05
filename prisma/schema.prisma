@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model clientes {
+  id             Int        @id @default(autoincrement())
+  id_cliente     String?    @unique
+  nombre_empresa String?
+  facturas       facturas[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model data_entrada_silpro {
+  id              BigInt?
+  nombre_empresa  String?
+  id_cliente      String?
+  volumen_total   Float?
+  margen_promedio Float?
+  recency         BigInt?
+  frecuencia      BigInt?
+  ano             Decimal? @db.Decimal
+  mes             String?
+
+  @@ignore
+}
+
+model facturas {
+  id              BigInt    @id
+  id_cliente      String?
+  mes             String?
+  ano             Decimal?  @db.Decimal
+  volumen_total   Float?
+  margen_promedio Float?
+  recency         BigInt?
+  frecuencia      BigInt?
+  clientes        clientes? @relation(fields: [id_cliente], references: [id_cliente], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model rangos {
+  id         Int    @id @default(autoincrement())
+  nombre     String @db.VarChar(255)
+  min_valor  Int
+  max_valor  Int
+  puntuacion Int?
+}
+
+model variable {
+  id     Int     @id @default(autoincrement())
+  nombre String? @db.VarChar(255)
+  peso   Float
+}
