@@ -17,7 +17,7 @@ const {data, error} = await Astro.callAction(actions.getVariables, {})
           </div>
           <div class="flex flex-col gap-2">
             <label class="text-lg font-semibold text-gray-700">Peso</label>
-            <input type="number" step="0.01" name="peso" value={variable.peso ?? ''} class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Peso de la variable" />
+            <input type="number" step="0.01" name="peso" value={variable.peso?.toString().replace(',', '.') ?? ''} inputmode="decimal" pattern="[0-9]+(\\.[0-9]{1,2})?" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Peso de la variable" />
           </div>
           <button type="submit" class="w-full py-3 rounded-lg bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold text-lg shadow hover:scale-105 transition-transform">Guardar</button>
         </form>
