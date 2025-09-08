@@ -2,6 +2,10 @@
 import '../styles/global.css';
 import { actions } from "astro:actions";
 const {data, error} = await Astro.callAction(actions.getAllClientes, {})
+interface Cliente {
+	cliente_id?: string;
+	nombre_empresa?: string;
+}
 ---
 
 <section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-green-100">
@@ -10,11 +14,11 @@ const {data, error} = await Astro.callAction(actions.getAllClientes, {})
 		{error && <p class="text-red-500 text-center">{error.message}</p>}
 		{data && data.length > 0 ? (
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-				{data.map(cliente => (
+				{data.map((cliente: Cliente) => (
 					<div class="bg-gradient-to-r from-green-200 to-blue-200 rounded-xl shadow p-6 flex flex-col items-start hover:scale-105 transition-transform">
 						<div class="flex items-center gap-3 mb-2">
 							<span class="inline-block bg-blue-500 text-white rounded-full px-3 py-1 text-sm font-bold">ID</span>
-							<span class="text-lg font-semibold text-blue-900">{cliente.id_cliente ?? 'Sin ID'}</span>
+							<span class="text-lg font-semibold text-blue-900">{cliente.cliente_id ?? 'Sin ID'}</span>
 						</div>
 						<div class="text-xl font-bold text-green-700 mb-1">{cliente.nombre_empresa ?? 'Sin nombre'}</div>
 						<div class="text-gray-500 text-sm">Empresa registrada</div>
