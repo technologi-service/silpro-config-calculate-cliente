@@ -6,7 +6,7 @@ export const getAllClientes = defineAction({
   handler: async ({ request }) => {
     try {
       const clientes = await prisma.clientes.findMany({
-        take: 100, // Limitar a 100 clientes para evitar sobrecarga
+        take: 100,
       });
       return clientes;
     } catch (error) {

@@ -7,11 +7,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model catalogo_segmentos_vcs {
+  id                Int     @id @default(autoincrement())
+  segmento_numerico Int     @unique
+  nombre_categoria  String
+  estrellas         Int
+  score_min         Decimal @db.Decimal(3, 1)
+  score_max         Decimal @db.Decimal(3, 1)
+}
+
 model clientes {
-  id                Int                 @id @default(autoincrement())
-  cliente_id        String              @unique
-  nombre_empresa    String?
-  facturas_clientes facturas_clientes[]
+  id                    Int                 @id @default(autoincrement())
+  cliente_id            String              @unique
+  nombre_empresa        String?
+  segmento_anterior     String?
+  segmento_actual       String?
+  score_numerico_actual Decimal?            @db.Decimal
+  volumen_facturacion   Float?
+  margen_total          Float?
+  recency               Int?
+  frecuencia            Int?
+  segmento_numerico     Decimal?            @db.Decimal
+  facturas_clientes     facturas_clientes[]
 }
 
 model data_entrada_tubos_paris {
@@ -58,6 +75,23 @@ model facturas_clientes {
   clientes     clientes? @relation(fields: [cliente_id], references: [cliente_id], onDelete: Restrict, map: "facturas_cliente_id_fkey")
 }
 
+model puntuaciones_clientes {
+  id                    Int      @id @default(autoincrement())
+  id_cliente            Int?     @unique(map: "unique_id_cliente")
+  nombre_empresa        String?
+  recency               Int?
+  frecuencia            Int?
+  ano                   Int?
+  mes                   Int?
+  puntuacion_volumen    Int?
+  puntuacion_margen     Int?
+  puntuacion_recency    Int?
+  puntuacion_frecuencia Int?
+  ponderacion_vcs       Decimal? @db.Decimal(10, 2)
+  segmento_numerico     Int?
+  segmento_categorico   String?
+}
+
 model puntuaciones_clientes_vcs {
   id                    Int      @id @default(autoincrement())
   id_cliente            Int?
@@ -89,15 +123,6 @@ model variable {
   id     Int     @id @default(autoincrement())
   nombre String? @db.VarChar(255)
   peso   Float?
-}
-
-model catalogo_segmentos_vcs {
-  id                Int     @id @default(autoincrement())
-  segmento_numerico Int     @unique
-  nombre_categoria  String
-  estrellas         Int
-  score_min         Decimal @db.Decimal(3, 1)
-  score_max         Decimal @db.Decimal(3, 1)
 }
 
 enum VariablesVcs {

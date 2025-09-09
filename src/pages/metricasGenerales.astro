@@ -1,13 +1,13 @@
 ---
-import '../styles/global.css';
-import MainLayout from "../layouts/MainLayout.astro";
-import Grafia from '../components/GraficaConSegmentos.astro';
+import ViewMetricas from '../components/ViewMetricas.tsx';
+import { actions } from 'astro:actions';
+import MainLayout from '../layouts/MainLayout.astro';
+import ReloadButton from '../components/ReloadButton.astro';
 
 
 
 ---
-<MainLayout>
-
-<Grafia />
+<MainLayout title="Métricas Generales">
+  <ViewMetricas client:only />
+  <ReloadButton />
 </MainLayout>
-
