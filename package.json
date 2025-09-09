@@ -12,6 +12,7 @@
     "@astrojs/cloudflare": "^12.6.8",
     "@astrojs/node": "^9.4.3",
     "@astrojs/react": "^4.3.0",
+    "@astrojs/vercel": "^8.2.7",
     "@prisma/client": "^6.15.0",
     "@tailwindcss/vite": "^4.1.12",
     "@types/react": "^19.1.12",
