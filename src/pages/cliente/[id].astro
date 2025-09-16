@@ -6,17 +6,17 @@ const id_cliente = Astro.params.id;
 
 let cliente = null;
 if (id_cliente) {
-  cliente = await Astro.callAction(actions.getMetricasByCliente, { id: Number(id_cliente) });
+  cliente = await Astro.callAction(actions.getClienteById, { id_cliente });
 }
 ---
-<MainLayout title={cliente?.data?.nombre_empresa ?? "Detalle Cliente"}>
+<MainLayout title={cliente?.data?.nombre_empresa ?? cliente?.data?.nombre_empresa ?? "Detalle Cliente"}>
   <section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#05060a] via-[#0a0f1a] to-[#0a0f1a] text-slate-100">
     <div class="w-full max-w-3xl rounded-2xl border border-slate-800 bg-slate-900 p-8 md:p-10 shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
       <h2 class="text-3xl md:text-4xl font-extrabold text-center tracking-wide mb-8 text-white">
         Datos del Cliente
       </h2>
 
-      {id_cliente && cliente ? (
+  {id_cliente && cliente && cliente.data ? (
         <>
           <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 hover:bg-slate-800 transition">
@@ -31,12 +31,12 @@ if (id_cliente) {
 
             <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 hover:bg-slate-800 transition">
               <span class="inline-flex items-center rounded-md bg-slate-800 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-200 ring-1 ring-slate-700">Recency</span>
-              <span class="ml-auto text-base text-slate-100">{cliente.data?.puntuacion_recency?.toString() ?? 'N/A'}</span>
+              <span class="ml-auto text-base text-slate-100">{cliente.data?.puntuacion_recency?.toString() ?? cliente.data?.recency?.toString() ?? 'N/A'}</span>
             </div>
 
             <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 hover:bg-slate-800 transition">
               <span class="inline-flex items-center rounded-md bg-slate-800 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-200 ring-1 ring-slate-700">Segmento numérico</span>
-              <span class="ml-auto text-base text-slate-100">{cliente.data?.segmento_numerico}</span>
+              <span class="ml-auto text-base text-slate-100">{cliente.data?.segmento_numerico ?? cliente.data?.segmento_actual}</span>
             </div>
 
             <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 hover:bg-slate-800 transition">
@@ -51,17 +51,17 @@ if (id_cliente) {
 
             <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 hover:bg-slate-800 transition">
               <span class="inline-flex items-center rounded-md bg-slate-800 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-200 ring-1 ring-slate-700">Punt. Volumen</span>
-              <span class="ml-auto text-base text-slate-100">{cliente.data?.puntuacion_volumen}</span>
+              <span class="ml-auto text-base text-slate-100">{cliente.data?.puntuacion_volumen ?? cliente.data?.score_numerico_actual}</span>
             </div>
 
             <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 hover:bg-slate-800 transition">
               <span class="inline-flex items-center rounded-md bg-slate-800 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-200 ring-1 ring-slate-700">Punt. Margen</span>
-              <span class="ml-auto text-base text-slate-100">{cliente.data?.puntuacion_margen}</span>
+              <span class="ml-auto text-base text-slate-100">{cliente.data?.puntuacion_margen ?? cliente.data?.margen_total}</span>
             </div>
 
             <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 hover:bg-slate-800 transition">
               <span class="inline-flex items-center rounded-md bg-slate-800 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-200 ring-1 ring-slate-700">Punt. Frecuencia</span>
-              <span class="ml-auto text-base text-slate-100">{cliente.data?.puntuacion_frecuencia?.toString() ?? 'N/A'}</span>
+              <span class="ml-auto text-base text-slate-100">{cliente.data?.puntuacion_frecuencia?.toString() ?? cliente.data?.frecuencia?.toString() ?? 'N/A'}</span>
             </div>
 
             <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 hover:bg-slate-800 transition">
@@ -71,7 +71,7 @@ if (id_cliente) {
 
             <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 hover:bg-slate-800 transition md:col-span-2">
               <span class="inline-flex items-center rounded-md bg-slate-800 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-200 ring-1 ring-slate-700">Segmento categórico</span>
-              <span class="ml-auto text-base text-slate-100">{cliente.data?.segmento_categorico}</span>
+              <span class="ml-auto text-base text-slate-100">{cliente.data?.segmento_categorico ?? cliente.data?.segmento_actual}</span>
             </div>
           </div>
         </>

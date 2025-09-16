@@ -17,91 +17,49 @@ model catalogo_segmentos_vcs {
 }
 
 model clientes {
-  id                    Int                 @id @default(autoincrement())
-  cliente_id            String              @unique
-  nombre_empresa        String?
-  segmento_anterior     String?
-  segmento_actual       String?
-  score_numerico_actual Decimal?            @db.Decimal
-  volumen_facturacion   Float?
-  margen_total          Float?
-  recency               Int?
-  frecuencia            Int?
-  segmento_numerico     Decimal?            @db.Decimal
-  facturas_clientes     facturas_clientes[]
+  id             Int        @id @default(autoincrement())
+  id_cliente     String?    @unique
+  nombre_empresa String?
+  facturas       facturas[]
 }
 
-model data_entrada_tubos_paris {
-  id               BigInt  @id @default(autoincrement())
-  cliente_id       Int
-  mes              Int
-  ano              Int
-  recencia         Int
-  volumen_total    Decimal @db.Decimal(18, 2)
-  frecuencia_total Int
-  margen_promedio  Decimal @db.Decimal(18, 4)
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model data_entrada_silpro {
+  id              BigInt?
+  nombre_empresa  String?
+  id_cliente      String?
+  volumen_total   Float?
+  margen_promedio Float?
+  recency         BigInt?
+  frecuencia      BigInt?
+  ano             Decimal? @db.Decimal
+  mes             String?
 
-  @@unique([cliente_id, mes, ano])
+  @@ignore
 }
 
 model facturas {
-  id           Int       @id(map: "agen_pkey") @default(autoincrement())
-  cliente_id   String?
-  fecha_compra DateTime? @default(now()) @db.Timestamp(6)
-  mes          Int?
-  ano          Int?
-  volumen      Decimal?  @db.Decimal
-  frecuencia   Int?
-  recencia     Int?
-  margen       Decimal?  @db.Decimal
-  portes       Decimal?  @db.Decimal
-  impago       String?
-
-  @@index([cliente_id, fecha_compra(sort: Desc)], map: "idx_facturas_cliente_fecha")
-}
-
-model facturas_clientes {
-  id           Int       @id(map: "facturas_pkey") @default(autoincrement())
-  cliente_id   String?
-  fecha_compra DateTime? @default(now()) @db.Timestamp(6)
-  mes          Int?
-  ano          Int?
-  volumen      Decimal?  @db.Decimal
-  frecuencia   Int?
-  recencia     Int?
-  margen       Decimal?  @db.Decimal
-  portes       Decimal?  @db.Decimal
-  impago       String?
-  clientes     clientes? @relation(fields: [cliente_id], references: [cliente_id], onDelete: Restrict, map: "facturas_cliente_id_fkey")
-}
-
-model puntuaciones_clientes {
-  id                    Int      @id @default(autoincrement())
-  id_cliente            Int?     @unique(map: "unique_id_cliente")
-  nombre_empresa        String?
-  recency               Int?
-  frecuencia            Int?
-  ano                   Int?
-  mes                   Int?
-  puntuacion_volumen    Int?
-  puntuacion_margen     Int?
-  puntuacion_recency    Int?
-  puntuacion_frecuencia Int?
-  ponderacion_vcs       Decimal? @db.Decimal(10, 2)
-  segmento_numerico     Int?
-  segmento_categorico   String?
+  id              BigInt    @id
+  id_cliente      String?
+  mes             String?
+  ano             Decimal?  @db.Decimal
+  volumen_total   Float?
+  margen_promedio Float?
+  recency         BigInt?
+  frecuencia      BigInt?
+  clientes        clientes? @relation(fields: [id_cliente], references: [id_cliente], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model puntuaciones_clientes_vcs {
   id                    Int      @id @default(autoincrement())
-  id_cliente            Int?
-  nombre_empresa        String?  @default("nombre de la empresa")
+  id_cliente            String?
+  nombre_empresa        String?
   volumen_total         Float?
   margen_promedio       Float?
   recency               BigInt?
   frecuencia            BigInt?
   ano                   Decimal? @db.Decimal
-  mes                   Decimal? @db.Decimal
+  mes                   String?
   puntuacion_volumen    Int?
   puntuacion_margen     Int?
   puntuacion_recency    Int?
@@ -122,14 +80,5 @@ model rangos {
 model variable {
   id     Int     @id @default(autoincrement())
   nombre String? @db.VarChar(255)
-  peso   Float?
-}
-
-enum VariablesVcs {
-  VOLUMEN
-  FRECUENCIA
-  RECENCIA
-  MARGEN
-  PORTES
-  IMPAGO
+  peso   Float
 }

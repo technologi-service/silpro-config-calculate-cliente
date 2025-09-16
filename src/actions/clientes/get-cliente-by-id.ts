@@ -5,22 +5,22 @@ import { z } from 'astro:schema';
 export const getClienteById = defineAction({
   accept: 'json',
   input: z.object({
-    id_cliente: z.number(),
-
+    id_cliente: z.string(), // id_cliente es string según el modelo
   }),
-  handler: async ({  id_cliente }) => {
+  handler: async ({ id_cliente }) => {
     try {
-      // Busca las métricas del cliente por id
-      const metricas = await prisma.clientes.findUnique({
-        where: { id: id_cliente },
+      // Busca el último registro de puntuación del cliente
+      const ultimaPuntuacion = await prisma.puntuaciones_clientes_vcs.findFirst({
+        where: { id_cliente },
+        orderBy: { id: 'desc' },
       });
-      if (!metricas) {
+      if (!ultimaPuntuacion) {
         return null;
       }
-      return metricas;
+      return ultimaPuntuacion;
     } catch (error) {
-      console.error('Error fetching métricas del cliente:', error);
-      throw new Error('Failed to fetch métricas del cliente');
+      console.error('Error fetching última puntuación del cliente:', error);
+      throw new Error('Failed to fetch última puntuación del cliente');
     }
   },
 });

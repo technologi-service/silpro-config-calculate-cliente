@@ -2,17 +2,28 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 const ApexChart: React.FC = () => {
-  const [state] = React.useState({
-    series: [
-      { name: 'Segmentos 1', data: [44, 55, 41, 67, 22, 43] },
-      { name: 'Segmentos 2', data: [13, 23, 20, 8, 13, 27] },
-      { name: 'Segmentos 3', data: [11, 17, 15, 15, 21, 14] },
-      { name: 'Segmentos 4', data: [21, 7, 25, 13, 22, 8] },
-      { name: 'Segmentos 5', data: [21, 7, 25, 13, 22, 8] }
-    ],
+  React.useEffect(() => {
+    fetch('/api/metricas')
+      .then((res) => res.json())
+      .then((data) => {
+        setState((prev) => ({
+          ...prev,
+          series: data.series,
+          options: {
+            ...prev.options,
+            xaxis: {
+              ...prev.options.xaxis,
+              categories: data.categories
+            }
+          },
+        }));
+      });
+  }, []);
+  const [state, setState] = React.useState({
+    series: [],
     options: {
       chart: {
-        type: 'bar',
+        type: "bar",
         height: 350,
         stacked: true,
         toolbar: { show: true },
@@ -57,3 +68,7 @@ const ApexChart: React.FC = () => {
 };
 
 export default ApexChart;
+function setState(arg0: (prev: any) => any) {
+  throw new Error("Function not implemented.");
+}
+
