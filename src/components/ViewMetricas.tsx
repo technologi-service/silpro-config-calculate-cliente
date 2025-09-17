@@ -23,7 +23,7 @@ const ApexChart: React.FC = () => {
     series: [],
     options: {
       chart: {
-        type: "bar",
+        type: 'bar' as const,
         height: 350,
         stacked: true,
         toolbar: { show: true },

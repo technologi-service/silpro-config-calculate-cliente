@@ -1,0 +1,26 @@
+---
+// Componente de inicio con rutas principales
+---
+<section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-green-100">
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center">
+    <h1 class="text-4xl font-extrabold text-blue-700 mb-8 text-center">Bienvenido</h1>
+    <p class="text-lg text-gray-600 mb-6 text-center">Selecciona una sección para navegar:</p>
+    <nav class="w-full flex flex-col gap-4">
+        <a href="/metricasGenerales" class="w-full py-3 px-6 rounded-lg bg-gradient-to-r from-green-500 to-blue-400 text-white font-bold text-lg shadow hover:scale-105 transition-transform flex items-center justify-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6" /></svg>
+        Métricas Generales
+      </a>
+
+
+      <a href="/configuracion" class="w-full py-3 px-6 rounded-lg bg-gradient-to-r from-blue-400 to-green-500 text-white font-bold text-lg shadow hover:scale-105 transition-transform flex items-center justify-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        Configuración
+      </a>
+       <a href="/vistaClientes" class="w-full py-3 px-6 rounded-lg bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold text-lg shadow hover:scale-105 transition-transform flex items-center justify-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M12 12a4 4 0 100-8 4 4 0 000 8zm0 0v4m0 4v.01" /></svg>
+        Clientes
+      </a>
+
+    </nav>
+  </div>
+</section>

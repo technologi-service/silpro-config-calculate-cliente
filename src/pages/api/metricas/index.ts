@@ -29,8 +29,7 @@ export const GET: APIRoute = async ({ params, request }) => {
   });
 
   // Segmentos que siempre deben aparecer
-  const segmentosFijos = ['Inactivo', 'Alerta', 'Oportunidad', 'Consolidado', 'Campeon'];
-  // Unir los segmentos fijos con los que aparecen en los datos
+  const segmentosFijos = ['5*', '4*', '3*','2*','1*'];
   const segmentosUnicos = Array.from(
     new Set([...segmentosFijos, ...registros.map((r) => r.segmento_categorico).filter(Boolean)])
   );
