@@ -1,5 +1,5 @@
 ---
-import '../styles/global.css';
+import '../../styles/global.css';
 
 
 // ...existing code...
@@ -41,21 +41,21 @@ import '../styles/global.css';
 										<span class="font-bold text-sm">Clientes</span>
 										<span class="text-xl font-extrabold">${seg.num_clientes ?? seg.numero_clientes}</span>
 									</div>
-									<div class="bg-green-50 rounded-lg p-3 text-green-900 flex flex-col items-center">
-										<span class="font-bold text-sm">Volumen total</span>
-										<span class="text-xl font-extrabold">${seg.suma_volumen_total?.toLocaleString() ?? seg.suma_volumen_total}</span>
-									</div>
+								<div class="bg-green-50 rounded-lg p-3 text-green-900 flex flex-col items-center">
+  <span class="font-bold text-sm">Volumen total</span>
+  <span class="text-xl font-extrabold">
+    ${seg.suma_volumen_total !== undefined
+      ? new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(seg.suma_volumen_total)
+      : '-'}
+  </span>
+</div>
 									<div class="bg-blue-50 rounded-lg p-3 text-blue-900 flex flex-col items-center">
-										<span class="font-bold text-sm">Promedio volumen</span>
-										<span class="text-lg font-bold">${seg.promedio_volumen_total?.toFixed(2) ?? seg.promedio_volumen_por_cliente?.toFixed(2)}</span>
-									</div>
-									<div class="bg-pink-50 rounded-lg p-3 text-pink-900 flex flex-col items-center">
-										<span class="font-bold text-sm">Margen total</span>
-										<span class="text-xl font-extrabold">${seg.suma_margen_promedio?.toLocaleString() ?? seg.suma_margen_total?.toLocaleString() ?? '-'}</span>
-									</div>
-									<div class="bg-pink-50 rounded-lg p-3 text-pink-900 flex flex-col items-center col-span-2">
-										<span class="font-bold text-sm">Promedio margen</span>
-										<span class="text-lg font-bold">${seg.promedio_margen_promedio?.toFixed(2) ?? '-'}</span>
+										<span class="font-bold text-sm">ticket medio</span>
+					<span class="text-lg font-bold">
+  ${seg.ticket_medio !== undefined
+    ? new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(seg.ticket_medio)
+    : '-'}
+</span>
 									</div>
 								</div>
 							</div>
